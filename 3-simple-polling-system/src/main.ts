@@ -67,7 +67,7 @@ app.post('/proposals', (req: Request, res: Response) => {
   res.status(201).json(newProgram);
 });
 
-// رأی دادن به یک برنامه
+
 app.post('/votes', (req: Request, res: Response) => {
   const { programId } = req.body;
   const program = proposals.find(p => p.id === programId);
@@ -85,7 +85,7 @@ app.post('/votes', (req: Request, res: Response) => {
   res.json({ message: 'Vote registered.' });
 });
 
-// فعال‌سازی رأی‌گیری برای یک طرح
+
 app.put('/proposals/:id/activate-voting', (req: Request, res: Response) => {
   const proposalId = parseInt(req.params.id);
   const proposal = projects.find(p => p.id === proposalId);
@@ -98,7 +98,7 @@ app.put('/proposals/:id/activate-voting', (req: Request, res: Response) => {
   res.json(proposal);
 });
 
-// دریافت نتایج نهایی بعد از پایان رأی‌گیری
+
 app.get('/proposals/:id/results', (req: Request, res: Response) => {
   const proposalId = parseInt(req.params.id);
   const proposal = projects.find(p => p.id === proposalId);
