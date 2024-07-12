@@ -1,0 +1,4 @@
+docker image pull collegedev/interview_task:test
+docker run -it collegedev/interview_task:test
+Please enter your name: Parnia Eshaghi
+Your password is 'U2FsdGVkX1+PTP/DygT9R9ER/DN3gNbnoBIU0F7CSEQ='
