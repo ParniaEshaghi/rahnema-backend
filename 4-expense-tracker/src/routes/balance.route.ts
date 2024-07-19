@@ -1,5 +1,6 @@
 import { Router } from 'express';
-import { groups, expenses, Group, Expense, User } from '../index';
+import { groups } from '../index';
+import { Group, Member } from '../types';
 
 const router = Router();
 
@@ -12,31 +13,16 @@ router.get("/:id", (req, res) => {
         return res.status(400).json({ message: 'Invalid group ID' });
     }
 
-    const balances: { [userId: string]: number } = {};
-    group.members.forEach((member: User) => {
-        balances[member.id] = 0;
-    });
+    const creditors: Member[] = [];
+    const debtors: Member[] = [];
 
-    expenses.forEach((expense: Expense) => {
-        if (expense.paidFor.id === groupId) {
-            const amountPerMember = expense.paidSum / expense.paidFor.members.length;
-            balances[expense.paidBy.id] += expense.paidSum;
-            expense.paidFor.members.forEach((member: User) => {
-                balances[member.id] -= amountPerMember;
-            });
+    group.members.forEach((member: Member) => {
+        if (member.status === 'creditor') {
+            creditors.push(member);
+        } else if (member.status === 'debtor') {
+            debtors.push(member);
         }
     });
-
-    const creditors: { userId: string, balance: number }[] = [];
-    const debtors: { userId: string, balance: number }[] = [];
-
-    for (const [userId, balance] of Object.entries(balances)) {
-        if (balance > 0) {
-            creditors.push({ userId, balance });
-        } else if (balance < 0) {
-            debtors.push({ userId, balance: -balance });
-        }
-    }
 
     const transactions = [];
 
@@ -44,10 +30,10 @@ router.get("/:id", (req, res) => {
         const debtor = debtors[0];
         const creditor = creditors[0];
 
-        const minAmount = Math.min(debtor.balance, creditor.balance);
+        const minAmount = Math.min(-debtor.balance, creditor.balance);
         transactions.push({
-            from: debtor.userId,
-            to: creditor.userId,
+            from: debtor.id,
+            to: creditor.id,
             amount: parseFloat(minAmount.toFixed(2))
         });
 
@@ -55,10 +41,12 @@ router.get("/:id", (req, res) => {
         creditor.balance -= minAmount;
 
         if (debtor.balance === 0) {
+            debtor.status = null;
             debtors.shift();
         }
 
         if (creditor.balance === 0) {
+            creditor.status = null;
             creditors.shift();
         }
     }
