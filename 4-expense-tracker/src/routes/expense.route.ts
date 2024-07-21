@@ -29,16 +29,8 @@ router.post("/", (req, res) => {
 
     expenses.push(newExpense);
 
-    const amountPerMember = paidSum / paidFor.members.length;
-    paidFor.members.forEach((member: Member) => {
-        if (member.id === paidById) {
-            member.balance += paidSum - amountPerMember;
-        } else {
-            member.balance -= amountPerMember;
-        }
-
-        member.status = member.balance > 0 ? 'creditor' : member.balance < 0 ? 'debtor' : null;
-    });
+    updateBalance(newExpense);
+    updateStatus(newExpense);
 
     res.status(201).json(newExpense);
 });
@@ -55,3 +47,21 @@ router.get("/:id", (req, res) => {
 });
 
 export default router;
+
+
+export const updateBalance = ((expense: Expense): void => {
+    const amountPerMember = expense.paidSum / expense.paidFor.members.length;
+    expense.paidFor.members.forEach((member: Member) => {
+        if (member.id === expense.paidBy.id) {
+            member.balance += expense.paidSum - amountPerMember;
+        } else {
+            member.balance -= amountPerMember;
+        }
+    });
+});
+
+export const updateStatus = (({ paidFor }: Expense): void => {
+    paidFor.members.forEach((member: Member) => {
+        member.status = member.balance > 0 ? 'creditor' : member.balance < 0 ? 'debtor' : null;
+    });
+});

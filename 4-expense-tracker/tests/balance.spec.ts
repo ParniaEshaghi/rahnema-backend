@@ -1,7 +1,7 @@
 import request from 'supertest';
 import app from '../src/index';
-import { server } from '../src/server';
 import { users, groups, expenses } from '../src/index';
+import { updateBalance, updateStatus } from '../src/routes/expense.route';
 
 describe('Balance Test', () => {
     beforeAll(async () => {
@@ -22,28 +22,26 @@ describe('Balance Test', () => {
             ]
         });
 
-        await request(app)
-            .post('/expense')
-            .send({
-                paidById: '1',
-                paidForId: '1',
-                purpose: 'Lunch',
-                paidSum: 90
-            });
+        expenses.push({
+            id: 'e1',
+            paidBy: users[0],
+            paidFor: groups[0],
+            purpose: 'Lunch',
+            paidSum: 90
+        });
 
-        await request(app)
-            .post('/expense')
-            .send({
-                paidById: '2',
-                paidForId: '1',
-                purpose: 'Coffee',
-                paidSum: 60
-            });
+        expenses.push({
+            id: 'e2',
+            paidBy: users[1],
+            paidFor: groups[0],
+            purpose: 'Coffee',
+            paidSum: 60
+        });
+
+        expenses.forEach(updateBalance)
+        expenses.forEach(updateStatus)
     });
 
-    afterAll(done => {
-        server.close(done);
-    });
 
     describe('GET /balance/:id', () => {
         it('should return the minimum transactions to settle balances for a valid group', async () => {

@@ -1,6 +1,5 @@
 import request from 'supertest';
 import app from '../src/index';
-import { server } from '../src/server';
 import { users, groups, expenses } from '../src/index';
 
 describe('Expense Test', () => {
@@ -35,9 +34,6 @@ describe('Expense Test', () => {
         });
     });
 
-    afterAll((done) => {
-        server.close(done);
-    });
 
     describe('POST /expense', () => {
         it('should create a new expense', async () => {
