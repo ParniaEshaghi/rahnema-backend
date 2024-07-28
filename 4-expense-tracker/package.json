@@ -4,8 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "ts-node src/main.ts",
-    "test": "jest --testMatch **/tests/**/*.spec.ts"
+    "start": "ts-node src/server.ts",
+    "test": "jest --testMatch **/tests/unit/**/*.spec.ts",
+    "test:e2e": "jest --testMatch **/tests/e2e/**/*.spec.ts"
   },
   "keywords": [],
   "author": "",
@@ -25,6 +26,7 @@
   },
   "dependencies": {
     "express": "^4.19.2",
-    "uuid": "^10.0.0"
+    "uuid": "^10.0.0",
+    "zod": "^3.23.8"
   }
 }

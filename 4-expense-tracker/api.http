@@ -1,0 +1,9 @@
+POST http://localhost:3000/expense
+Content-Type: application/json
+
+{
+    "paidById": "1",
+    "paidForId": "1",
+    "purpose": "Lunch",
+    "paidSum": 100
+}

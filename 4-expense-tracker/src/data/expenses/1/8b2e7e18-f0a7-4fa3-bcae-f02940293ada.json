@@ -1,0 +1,31 @@
+{
+    "8b2e7e18-f0a7-4fa3-bcae-f02940293ada": {
+        "id": "8b2e7e18-f0a7-4fa3-bcae-f02940293ada",
+        "paidBy": {
+            "id": "1",
+            "name": "John Doe"
+        },
+        "paidFor": {
+            "id": "1",
+            "name": "Test Group",
+            "members": [
+                {
+                    "id": "1",
+                    "name": "John Doe",
+                    "groupId": "1",
+                    "balance": 0,
+                    "status": "balanced"
+                },
+                {
+                    "id": "2",
+                    "name": "Jane Doe",
+                    "groupId": "1",
+                    "balance": 0,
+                    "status": "balanced"
+                }
+            ]
+        },
+        "purpose": "Dinner",
+        "paidSum": 100
+    }
+}

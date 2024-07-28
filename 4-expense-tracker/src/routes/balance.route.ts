@@ -1,57 +1,17 @@
 import { Router } from 'express';
-import { groups } from '../index';
-import { Group, Member } from '../types';
+import { GroupService } from '../modules/Group/services/group.service';
+import { GroupRepository } from '../modules/Group/repositories/group.repository';
+import { handleExpress } from '../utility/handle-express';
 
-const router = Router();
 
-router.get("/:id", (req, res) => {
-    const groupId = req.params.id;
+export const makeBalanceRouter = (groupService: GroupService) => {
+    const router = Router();
 
-    const group = groups.find((group: Group) => group.id === groupId);
-
-    if (!group) {
-        return res.status(400).json({ message: 'Invalid group ID' });
-    }
-
-    const creditors: Member[] = [];
-    const debtors: Member[] = [];
-
-    group.members.forEach((member: Member) => {
-        if (member.status === 'creditor') {
-            creditors.push(member);
-        } else if (member.status === 'debtor') {
-            debtors.push(member);
-        }
+    router.get("/:id", (req, res) => {
+        const groupId = req.params.id;
+    
+        handleExpress(res, async () => groupService.getGroupTransactions(groupId));
     });
 
-    const transactions = [];
-
-    while (debtors.length > 0 && creditors.length > 0) {
-        const debtor = debtors[0];
-        const creditor = creditors[0];
-
-        const minAmount = Math.min(-debtor.balance, creditor.balance);
-        transactions.push({
-            from: debtor.id,
-            to: creditor.id,
-            amount: parseFloat(minAmount.toFixed(2))
-        });
-
-        debtor.balance -= minAmount;
-        creditor.balance -= minAmount;
-
-        if (debtor.balance === 0) {
-            debtor.status = null;
-            debtors.shift();
-        }
-
-        if (creditor.balance === 0) {
-            creditor.status = null;
-            creditors.shift();
-        }
-    }
-
-    res.json(transactions);
-});
-
-export default router;
+    return router;
+};

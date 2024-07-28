@@ -1,0 +1,22 @@
+{
+    "1": {
+        "id": "1",
+        "name": "Test Group",
+        "members": [
+            {
+                "id": "1",
+                "name": "John Doe",
+                "groupId": "1",
+                "balance": 0,
+                "status": "balanced"
+            },
+            {
+                "id": "2",
+                "name": "Jane Doe",
+                "groupId": "1",
+                "balance": 0,
+                "status": "balanced"
+            }
+        ]
+    }
+}
